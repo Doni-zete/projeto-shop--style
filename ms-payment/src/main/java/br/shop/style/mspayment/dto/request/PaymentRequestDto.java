@@ -1,13 +1,10 @@
-package br.shop.style.mspayment.dto;
+package br.shop.style.mspayment.dto.request;
 
 import lombok.Data;
 
 @Data
-public class PaymentDTO {
-    
+public class PaymentRequestDto {
     private String type;
-
     private Boolean installments;
-
     private Boolean active;
 }
