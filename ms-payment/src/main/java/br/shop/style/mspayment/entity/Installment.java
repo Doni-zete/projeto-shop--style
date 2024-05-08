@@ -1,9 +1,8 @@
 package br.shop.style.mspayment.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity
@@ -14,11 +13,13 @@ public class Installment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private Integer amount;
 
     private String brand;
 
-    @OneToMany
+    @NotNull
+    @ManyToOne
     @JoinColumn(name = "payment_id")
-    private List<Payment> payments;
+    private Payment payment;
 }
