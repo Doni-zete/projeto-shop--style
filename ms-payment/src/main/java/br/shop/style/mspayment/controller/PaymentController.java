@@ -1,9 +1,10 @@
 package br.shop.style.mspayment.controller;
 
-import br.shop.style.mspayment.entity.Payment;
+import br.shop.style.mspayment.dto.request.PaymentRequestDto;
+import br.shop.style.mspayment.dto.response.PaymentResponseDto;
 import br.shop.style.mspayment.service.PaymentService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,20 +17,27 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping
-    public ResponseEntity<List<Payment>> getPayments() {
-        var payments = paymentService.findAll();
-        return ResponseEntity.ok(payments);
+    @ResponseStatus(HttpStatus.OK)
+    public List<PaymentResponseDto> getPayments() {
+        return paymentService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Payment> savePayment(@RequestBody Payment payment) {
-        var payments = paymentService.save(payment);
-        return ResponseEntity.ok(payments);
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaymentResponseDto savePayment(@RequestBody PaymentRequestDto paymentRequestDto) {
+        return paymentService.create(paymentRequestDto);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PaymentResponseDto updatePayment(@RequestBody PaymentRequestDto paymentRequestDto,
+                                            @PathVariable Long id) {
+        return paymentService.update(paymentRequestDto, id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePayment(@PathVariable String id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePayment(@PathVariable Long id) {
         paymentService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

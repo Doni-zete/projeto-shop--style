@@ -1,13 +1,16 @@
 package br.shop.style.mspayment.service;
 
-import br.shop.style.mspayment.entity.Payment;
+import br.shop.style.mspayment.dto.request.PaymentRequestDto;
+import br.shop.style.mspayment.dto.response.PaymentResponseDto;
 
 import java.util.List;
 
 public interface PaymentService {
-    List<Payment> findAll();
+    List<PaymentResponseDto> findAll();
 
-    Payment save(Payment payment);
+    PaymentResponseDto create(PaymentRequestDto paymentRequestDto);
 
-    void delete(String payment);
+    PaymentResponseDto update(PaymentRequestDto paymentRequestDto, Long id);
+
+    void delete(Long id);
 }
