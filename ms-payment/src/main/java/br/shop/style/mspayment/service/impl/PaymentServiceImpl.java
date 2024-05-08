@@ -18,6 +18,7 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentRepository repository;
     private PaymentMapper mapper;
 
+    @Override
     public List<PaymentResponseDto> findAll() {
         return repository.findAll()
                 .stream()
@@ -25,6 +26,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .toList();
     }
 
+    @Override
     public PaymentResponseDto update(PaymentRequestDto paymentRequestDto, Long id) {
         var payment = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("No payment method found for id: " + id));
@@ -37,6 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
         return mapper.paymentToPaymentResponseDto(updatedPayment);
     }
 
+    @Override
     public PaymentResponseDto create(PaymentRequestDto paymentRequestDto) {
 //        repository.findByType(paymentRequestDto.getType()).ifPresent(value -> {
 //            throw new PaymentMethodAlreadyExistsException("The payment method \""
@@ -48,6 +51,7 @@ public class PaymentServiceImpl implements PaymentService {
         return mapper.paymentToPaymentResponseDto(savedPayment);
     }
 
+    @Override
     public void delete(Long id) {
         var payment = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("No payment method found for id: " + id));

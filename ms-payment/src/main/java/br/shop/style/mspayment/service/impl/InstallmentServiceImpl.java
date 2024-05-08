@@ -20,6 +20,7 @@ public class InstallmentServiceImpl implements InstallmentService {
     private InstallmentRepository installmentRepository;
     private InstallmentMapper mapper;
 
+    @Override
     public InstallmentResponseDto update(InstallmentRequestDto installmentRequestDto, Long id) {
         var installment = installmentRepository.findById(id)
                 .orElseThrow(() -> new InstallmentNotFoundException("No installment found for id: " + id));
@@ -32,6 +33,7 @@ public class InstallmentServiceImpl implements InstallmentService {
         return mapper.installmentToInstallmentResponseDto(updatedInstallment);
     }
 
+    @Override
     public InstallmentResponseDto create(InstallmentRequestDto installmentRequestDto) {
         var paymentId = installmentRequestDto.getPaymentId();
         var payment = paymentRepository
@@ -48,9 +50,10 @@ public class InstallmentServiceImpl implements InstallmentService {
         return mapper.installmentToInstallmentResponseDto(savedInstallment);
     }
 
+    @Override
     public void delete(Long id) {
         var payment = installmentRepository.findById(id)
-                .orElseThrow(() -> new InstallmentNotFoundException("No payment method found for id: " + id));
+                .orElseThrow(() -> new InstallmentNotFoundException("No installment found for id: " + id));
         installmentRepository.delete(payment);
     }
 }
