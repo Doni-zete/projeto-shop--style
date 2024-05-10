@@ -1,9 +1,12 @@
 package br.shop.style.mspayment.handler;
 
+import br.shop.style.mspayment.exception.InstallmentAlreadyExistsException;
 import br.shop.style.mspayment.exception.InstallmentNotFoundException;
 import br.shop.style.mspayment.exception.PaymentMethodAlreadyExistsException;
 import br.shop.style.mspayment.exception.PaymentMethodNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +40,24 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionMessage> handleNoResourceFoundException(NoResourceFoundException e) {
         var response = new ExceptionMessage(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ExceptionMessage> handleValidationException(ValidationException e) {
+        var response = new ExceptionMessage(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionMessage> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        var response = new ExceptionMessage(HttpStatus.BAD_REQUEST, e.getCause().getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InstallmentAlreadyExistsException.class)
+    public ResponseEntity<ExceptionMessage> handleInstallmentAlreadyExistsException(InstallmentAlreadyExistsException e) {
+        var response = new ExceptionMessage(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
