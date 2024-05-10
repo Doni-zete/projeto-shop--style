@@ -9,9 +9,5 @@ import org.mapstruct.Mapper;
 public interface PaymentMapper {
     PaymentResponseDto paymentToPaymentResponseDto(Payment payment);
 
-    Payment paymentResponseDtoToPayment(PaymentResponseDto paymentResponseDto);
-
-    PaymentRequestDto paymentToPaymentRequestDto(Payment payment);
-
     Payment paymentRequestDtoToPayment(PaymentRequestDto paymentResponseDto);
 }

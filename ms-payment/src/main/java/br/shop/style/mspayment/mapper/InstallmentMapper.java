@@ -12,10 +12,5 @@ public interface InstallmentMapper {
     @Mapping(source = "payment.id", target = "paymentId")
     InstallmentResponseDto installmentToInstallmentResponseDto(Installment payment);
 
-    Installment installmentResponseDtoToInstallment(InstallmentResponseDto paymentResponseDto);
-
-    @Mapping(source = "payment.id", target = "paymentId")
-    InstallmentRequestDto installmentToInstallmentRequestDto(Installment payment);
-
     Installment installmentRequestDtoToInstallment(InstallmentRequestDto paymentResponseDto);
 }
