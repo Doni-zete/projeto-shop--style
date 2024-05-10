@@ -2,6 +2,7 @@ package br.shop.style.mspayment.service.impl;
 
 import br.shop.style.mspayment.dto.request.InstallmentRequestDto;
 import br.shop.style.mspayment.dto.response.InstallmentResponseDto;
+import br.shop.style.mspayment.exception.InstallmentAlreadyExistsException;
 import br.shop.style.mspayment.exception.InstallmentNotFoundException;
 import br.shop.style.mspayment.exception.PaymentMethodNotFoundException;
 import br.shop.style.mspayment.mapper.InstallmentMapper;
@@ -11,6 +12,8 @@ import br.shop.style.mspayment.service.InstallmentService;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -25,8 +28,8 @@ public class InstallmentServiceImpl implements InstallmentService {
         var installment = installmentRepository.findById(id)
                 .orElseThrow(() -> new InstallmentNotFoundException("No installment found for id: " + id));
 
-        installment.setAmount(installmentRequestDto.getAmount());
-        installment.setBrand(installmentRequestDto.getBrand());
+        installment.setAmount(installmentRequestDto.amount());
+        installment.setBrand(installmentRequestDto.brand());
 
         var updatedInstallment = installmentRepository.save(installment);
 
@@ -35,13 +38,17 @@ public class InstallmentServiceImpl implements InstallmentService {
 
     @Override
     public InstallmentResponseDto create(InstallmentRequestDto installmentRequestDto) {
-        var paymentId = installmentRequestDto.getPaymentId();
+        var paymentId = installmentRequestDto.paymentId();
         var payment = paymentRepository
                 .findById(paymentId)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("No payment method found for id: " + paymentId));
 
+        if (Objects.nonNull(payment.getInstallment()))
+            throw new InstallmentAlreadyExistsException("The payment method with ID '"
+                    + paymentId + "' already has an installment registered.");
+
         if (!payment.getInstallments())
-            throw new ValidationException("The payment method with ID " + paymentId + " does not allow installments.");
+            throw new ValidationException("The payment method with ID '" + paymentId + "' does not allow installments.");
 
         var installment = mapper.installmentRequestDtoToInstallment(installmentRequestDto);
         installment.setPayment(payment);

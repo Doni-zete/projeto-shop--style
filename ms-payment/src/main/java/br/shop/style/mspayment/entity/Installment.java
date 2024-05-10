@@ -19,7 +19,6 @@ public class Installment {
     private String brand;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @OneToOne
     private Payment payment;
 }

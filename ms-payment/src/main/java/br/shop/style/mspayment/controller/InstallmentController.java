@@ -5,6 +5,7 @@ import br.shop.style.mspayment.dto.response.InstallmentResponseDto;
 import br.shop.style.mspayment.service.InstallmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -15,21 +16,21 @@ public class InstallmentController {
     private InstallmentService installmentService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public InstallmentResponseDto saveInstallment(@RequestBody InstallmentRequestDto installmentRequestDto) {
-        return installmentService.create(installmentRequestDto);
+    public ResponseEntity<InstallmentResponseDto> saveInstallment(@RequestBody InstallmentRequestDto installmentRequestDto) {
+        var response = installmentService.create(installmentRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public InstallmentResponseDto updateInstallment(@RequestBody InstallmentRequestDto installmentRequestDto,
-                                                    @PathVariable Long id) {
-        return installmentService.update(installmentRequestDto, id);
+    public ResponseEntity<InstallmentResponseDto> updateInstallment(@RequestBody InstallmentRequestDto installmentRequestDto,
+                                                                    @PathVariable Long id) {
+        var response = installmentService.update(installmentRequestDto, id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInstallment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteInstallment(@PathVariable Long id) {
         installmentService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
