@@ -5,6 +5,7 @@ import br.shop.style.mspayment.dto.response.PaymentResponseDto;
 import br.shop.style.mspayment.service.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,27 +18,29 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<PaymentResponseDto> getPayments() {
-        return paymentService.findAll();
+    public ResponseEntity<List<PaymentResponseDto>> getPayments() {
+        var response = paymentService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentResponseDto savePayment(@RequestBody PaymentRequestDto paymentRequestDto) {
-        return paymentService.create(paymentRequestDto);
+    public ResponseEntity<PaymentResponseDto> savePayment(@RequestBody PaymentRequestDto paymentRequestDto) {
+        var response = paymentService.create(paymentRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public PaymentResponseDto updatePayment(@RequestBody PaymentRequestDto paymentRequestDto,
-                                            @PathVariable Long id) {
-        return paymentService.update(paymentRequestDto, id);
+    public ResponseEntity<PaymentResponseDto> updatePayment(@RequestBody PaymentRequestDto paymentRequestDto,
+                                                            @PathVariable Long id) {
+        var response = paymentService.update(paymentRequestDto, id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePayment(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
         paymentService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

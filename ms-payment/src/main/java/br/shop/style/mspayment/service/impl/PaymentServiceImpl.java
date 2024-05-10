@@ -2,6 +2,7 @@ package br.shop.style.mspayment.service.impl;
 
 import br.shop.style.mspayment.dto.request.PaymentRequestDto;
 import br.shop.style.mspayment.dto.response.PaymentResponseDto;
+import br.shop.style.mspayment.exception.PaymentMethodAlreadyExistsException;
 import br.shop.style.mspayment.exception.PaymentMethodNotFoundException;
 import br.shop.style.mspayment.mapper.PaymentMapper;
 import br.shop.style.mspayment.repository.PaymentRepository;
@@ -30,9 +31,9 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentResponseDto update(PaymentRequestDto paymentRequestDto, Long id) {
         var payment = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("No payment method found for id: " + id));
-        payment.setActive(paymentRequestDto.getActive());
-        payment.setInstallments(paymentRequestDto.getInstallments());
-        payment.setType(paymentRequestDto.getType());
+        payment.setActive(paymentRequestDto.active());
+        payment.setInstallments(paymentRequestDto.installments());
+        payment.setType(paymentRequestDto.type());
 
         var updatedPayment = repository.save(payment);
 
@@ -41,10 +42,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponseDto create(PaymentRequestDto paymentRequestDto) {
-//        repository.findByType(paymentRequestDto.getType()).ifPresent(value -> {
-//            throw new PaymentMethodAlreadyExistsException("The payment method \""
-//                    + paymentRequestDto.getType() + "\" already exists.");
-//        });
+        repository.findByType(paymentRequestDto.type()).ifPresent(value -> {
+            throw new PaymentMethodAlreadyExistsException("The payment method \""
+                    + paymentRequestDto.type() + "\" already exists.");
+        });
         var payment = mapper.paymentRequestDtoToPayment(paymentRequestDto);
         var savedPayment = repository.save(payment);
 

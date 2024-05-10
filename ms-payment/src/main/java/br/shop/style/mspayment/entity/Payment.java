@@ -22,4 +22,7 @@ public class Payment {
 
     @NotNull
     private Boolean active;
+
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.REMOVE)
+    private Installment installment;
 }
