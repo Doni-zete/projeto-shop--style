@@ -1,26 +1,42 @@
 package br.shop.style.mscustomer.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import br.shop.style.mscustomer.dto.CustomerDto;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Getter
+
 @Table(name = "customers")
-@Entity(name = "cutomer")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Builder
 @EqualsAndHashCode(of = "id")
 public class Customer {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String cpf;
   private String firstName;
   private String lastName;
   private String sex;
-  private String birthdate;
+  private String birthDate;
   private String email;
   private String password;
-  private boolean ACTIVE;
+  private Boolean  active;
+
+
+
+  public Customer(CustomerDto customerDto) {
+    this.cpf = customerDto.getCpf();
+    this.firstName = customerDto.getFirstName();
+    this.lastName = customerDto.getLastName();
+    this.birthDate = customerDto.getBirthDate();
+    this.sex = customerDto.getSex();
+    this.email = customerDto.getEmail();
+    this.password = customerDto.getPassword();
+    this.active = customerDto.getActive();
+
+  }
 }
